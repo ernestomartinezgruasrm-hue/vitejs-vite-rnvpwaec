@@ -19,26 +19,27 @@ const calcTotal = (items) => items.reduce((s,i)=>s+(parseFloat(i.importe)||0),0)
 const genFolio = (list) => `RM-${new Date().getFullYear()}-${String(list.length+1).padStart(4,"0")}`;
 
 // PDF HTML
+// PDF HTML
 function buildPDF(q) {
   const rows = q.items.filter(i=>i.unidad||i.cantidad||i.pu);
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${q.folio}</title>
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=800"><title>${q.folio}</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Barlow Condensed',Arial,sans-serif;background:#fff;color:#111;font-size:13px}
-.hdr{background:#111;color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-.brand{font-size:22px;font-weight:800;letter-spacing:2px}.brand-sub{font-size:10px;color:#1a7a2e;letter-spacing:3px}
-.folio-box{background:#1a7a2e;padding:8px 18px;text-align:center}.folio-lbl{font-size:10px;letter-spacing:2px;color:#b0f0b8}.folio-val{font-size:20px;font-weight:800;letter-spacing:2px}
-.title{background:#1a7a2e;color:#fff;text-align:center;padding:10px;font-size:18px;font-weight:800;letter-spacing:4px}
-.body{padding:20px 24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 32px;margin-bottom:18px}
-.lbl{font-size:10px;font-weight:700;letter-spacing:2px;color:#666;text-transform:uppercase;display:block}.val{font-size:14px;font-weight:700}
-.cbox{background:#e8f5eb;border-left:3px solid #1a7a2e;padding:10px 14px;margin-bottom:18px;font-size:13px;line-height:1.6}
-table{width:100%;border-collapse:collapse;margin-bottom:10px}
-th{background:#111;color:#fff;padding:8px 10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-align:left}
-th.r{text-align:right;background:#1a7a2e}td{padding:8px 10px;border-bottom:1px solid #ddd;font-size:13px}td.r{text-align:right;font-weight:700;color:#1a7a2e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{font-family:'Barlow Condensed',Arial,sans-serif;background:#fff;color:#111;font-size:15px}
+.hdr{background:#111;color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:26px;font-weight:800;letter-spacing:2px}.brand-sub{font-size:12px;color:#1a7a2e;letter-spacing:3px}
+.folio-box{background:#1a7a2e;padding:10px 22px;text-align:center}.folio-lbl{font-size:11px;letter-spacing:2px;color:#b0f0b8}.folio-val{font-size:24px;font-weight:800;letter-spacing:2px}
+.title{background:#1a7a2e;color:#fff;text-align:center;padding:12px;font-size:20px;font-weight:800;letter-spacing:4px}
+.body{padding:24px 28px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 32px;margin-bottom:24px}
+.lbl{font-size:11px;font-weight:700;letter-spacing:2px;color:#666;text-transform:uppercase;display:block}.val{font-size:16px;font-weight:700}
+.cbox{background:#e8f5eb;border-left:4px solid #1a7a2e;padding:12px 16px;margin-bottom:24px;font-size:15px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-bottom:16px}
+th{background:#111;color:#fff;padding:10px 12px;font-size:12px;letter-spacing:2px;text-transform:uppercase;text-align:left}
+th.r{text-align:right;background:#1a7a2e}td{padding:10px 12px;border-bottom:1px solid #ddd;font-size:15px}td.r{text-align:right;font-weight:700;color:#1a7a2e}
 tr:nth-child(even) td{background:#f8f8f8}
-.total{display:flex;justify-content:flex-end;gap:24px;align-items:center;background:#111;color:#fff;padding:12px 16px}
-.tl{font-size:12px;letter-spacing:3px;color:#888}.tv{font-size:26px;font-weight:800;color:#22a83e}
-.footer{margin-top:28px;padding-top:12px;border-top:2px solid #1a7a2e;display:flex;justify-content:space-between;font-size:11px;color:#888}
-.sig{text-align:center}.sig-line{border-top:1px solid #999;width:180px;margin:32px auto 4px}
+.total{display:flex;justify-content:flex-end;gap:24px;align-items:center;background:#111;color:#fff;padding:16px 20px}
+.tl{font-size:14px;letter-spacing:3px;color:#888}.tv{font-size:30px;font-weight:800;color:#22a83e}
+.footer{margin-top:36px;padding-top:16px;border-top:3px solid #1a7a2e;display:flex;justify-content:space-between;font-size:12px;color:#888}
+.sig{text-align:center}.sig-line{border-top:1px solid #999;width:200px;margin:40px auto 6px}
 @media print{@page{margin:0.5in}}</style></head><body>
 <div class="hdr"><div><div class="brand">GRÚAS &amp; RIGGING RM</div><div class="brand-sub">AG INDUSTRIAL RM S DE R.L. DE C.V.</div></div>
 <div class="folio-box"><div class="folio-lbl">FOLIO</div><div class="folio-val">${q.folio}</div></div></div>
@@ -57,7 +58,7 @@ ${q.concepto?`<div class="cbox"><strong>Concepto:</strong> ${q.concepto}</div>`:
 <table><thead><tr><th>Unidad</th><th>Cantidad</th><th>P.U.</th><th class="r">Importe</th></tr></thead>
 <tbody>${rows.map(r=>`<tr><td>${r.unidad}</td><td>${r.cantidad}</td><td>${r.pu?fmt(r.pu):"—"}</td><td class="r">${r.importe?fmt(r.importe):"—"}</td></tr>`).join("")}</tbody></table>
 <div class="total"><span class="tl">TOTAL</span><span class="tv">${fmt(q.total)}</span></div>
-<div style="margin-top:32px"><div class="sig"><div class="sig-line"></div><div>${q.asesor}</div><div style="font-size:10px;color:#888;letter-spacing:1px">ASESOR COMERCIAL</div></div></div>
+<div style="margin-top:32px"><div class="sig"><div class="sig-line"></div><div>${q.asesor}</div><div style="font-size:11px;color:#888;letter-spacing:1px">ASESOR COMERCIAL</div></div></div>
 <div class="footer"><span>Carr. Federal Chihuahua-Aldama Km 6.5 | TEL. (614) 541-0888</span><span>Col. Valle de Chihuahua, CP 31385, Chihuahua, México</span></div>
 </div></body></html>`;
 }
